@@ -41,6 +41,12 @@ gulp.task('imagemin', function() {
     .pipe(notify({ message: 'Images task complete' }));
 });
 
+//copy html files in views folder to dist folder
+gulp.task('copyviews',['clean'], function(){
+    return gulp.src('./app/views/*.html')
+      .pipe(gulp.dest('dist/views/'));
+});
+
 // Clean
 gulp.task('clean', function() {
     return del(['dist']);
@@ -65,6 +71,7 @@ gulp.task('watch', ['browser-sync'], function() {
 gulp.task('browser-sync', ['default'], function () {
    var files = [
       'app/**/*.html',
+	  'app/views/**/*.html',
       'app/styles/**/*.css',
       'app/images/**/*.png',
       'app/scripts/**/*.js',
@@ -74,7 +81,8 @@ gulp.task('browser-sync', ['default'], function () {
    browserSync.init(files, {
       server: {
          baseDir: "dist"
-      }
+      },
+	  reloadDelay: 1000
    });
 // Watch any files in dist/, reload on change
 gulp.watch(['dist/**']).on('change', browserSync.reload);
@@ -82,5 +90,5 @@ gulp.watch(['dist/**']).on('change', browserSync.reload);
 
 // Default task
 gulp.task('default', ['clean'], function() {
-    gulp.start('usemin', 'imagemin','copyfonts');
+    gulp.start('usemin', 'imagemin','copyfonts','copyviews');
 });
